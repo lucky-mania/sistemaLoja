@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema de Estoque{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+                <p class="text-muted">Visão geral do seu estoque</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Total Products -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="stat-number">{{ stats.total_products }}</div>
+                            <div class="stat-label">Produtos em Estoque</div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-boxes stat-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Invested -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="stat-number">R$ {{ "%.2f"|format(stats.total_invested)|replace(".", ",") }}</div>
+                            <div class="stat-label">Valor Investido</div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-dollar-sign stat-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Potential Value -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="stat-number">R$ {{ "%.2f"|format(stats.total_potential)|replace(".", ",") }}</div>
+                            <div class="stat-label">Valor Potencial</div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-chart-line stat-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Profit -->
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="stat-number">R$ {{ "%.2f"|format(stats.total_profit)|replace(".", ",") }}</div>
+                            <div class="stat-label">Lucro Obtido</div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <i class="fas fa-trophy stat-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-rocket"></i> Ações Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('add_product') }}" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-plus"></i><br>
+                                <small>Cadastrar Produto</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('add_sale') }}" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-shopping-cart"></i><br>
+                                <small>Registrar Venda</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('products') }}" class="btn btn-info btn-lg w-100">
+                                <i class="fas fa-boxes"></i><br>
+                                <small>Ver Produtos</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('reports') }}" class="btn btn-warning btn-lg w-100">
+                                <i class="fas fa-chart-line"></i><br>
+                                <small>Relatórios</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

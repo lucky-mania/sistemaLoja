@@ -1,0 +1,117 @@
+Quero que você crie um projeto completo de gestão de estoque (entrada e saída de produtos).
+
+Requisitos Técnicos
+
+Frontend: HTML5 + CSS3 (responsivo, design limpo) + JavaScript puro (sem frameworks pesados).
+
+Backend: Node.js com Express ou PHP puro (escolha 1 e use até o fim).
+
+Banco de dados: SQLite (arquivo local .sqlite).
+
+Funcionalidades
+
+Login e Autenticação
+
+Página de login com email e senha.
+
+Proteção de rotas do painel (só logado acessa).
+
+Produtos
+
+Cadastro (nome, categoria, quantidade, valor de compra, valor de venda, data de entrada).
+
+Listagem em tabela com busca e paginação.
+
+Editar e excluir produtos.
+
+Saídas/Vendas
+
+Registrar venda (escolher produto, quantidade, valor de venda, data).
+
+Estoque deve ser atualizado automaticamente.
+
+Impedir venda maior que o estoque.
+
+Dashboard
+
+Mostrar total de produtos em estoque.
+
+Valor investido (soma valor_compra × quantidade).
+
+Valor de venda potencial (valor_venda × quantidade).
+
+Lucro total obtido (Σ (valor_venda_real − valor_compra) × quantidade vendida).
+
+Histórico
+
+Relatório de entradas e saídas.
+
+Filtro por período (data inicial/final).
+
+Botão para exportar relatório em CSV.
+
+Validações
+
+Nome e categoria obrigatórios.
+
+Quantidade > 0.
+
+Valores monetários sempre com 2 casas decimais.
+
+Design/UX
+
+Layout responsivo.
+
+Cabeçalho fixo com menu lateral.
+
+Campos de valor com máscara de moeda (R$).
+
+Alertas de sucesso/erro (toasts ou pop-ups simples).
+
+Banco de Dados (SQLite)
+
+Crie as tabelas assim:
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  senha_hash TEXT NOT NULL,
+  criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS produtos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome TEXT NOT NULL,
+  categoria TEXT,
+  quantidade INTEGER NOT NULL DEFAULT 0,
+  valor_compra REAL NOT NULL,
+  valor_venda REAL NOT NULL,
+  data_entrada DATE NOT NULL,
+  criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS vendas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  produto_id INTEGER NOT NULL,
+  quantidade INTEGER NOT NULL,
+  valor_venda REAL NOT NULL,
+  data_venda DATE NOT NULL,
+  criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+
+⚡ Crie também um usuário inicial:
+
+Email: admin@admin.com
+
+Senha: admin123 (armazenar como hash).
+
+Entregável
+
+Estrutura de pastas organizada (/frontend, /backend, /db).
+
+Código pronto para rodar (se Node: npm install && npm start; se PHP: só rodar em servidor local).
+
+Instruções no README explicando como iniciar o sistema.

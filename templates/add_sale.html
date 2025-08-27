@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Venda - Sistema de Estoque{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1><i class="fas fa-plus"></i> Registrar Venda</h1>
+                <div class="page-actions">
+                    <a href="{{ url_for('sales') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Dados da Venda</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="produto_id" class="form-label">Produto *</label>
+                                <select class="form-select" id="produto_id" name="produto_id" required>
+                                    <option value="">Selecione um produto...</option>
+                                    {% for product in products %}
+                                        {% if product.quantidade > 0 %}
+                                        <option value="{{ product.id }}" 
+                                                data-stock="{{ product.quantidade }}"
+                                                data-price="{{ product.valor_venda }}">
+                                            {{ product.nome }} - Estoque: {{ product.quantidade }}
+                                        </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor, selecione um produto.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="sale-details" style="display: none;">
+                            <div class="col-md-4 mb-3">
+                                <label for="quantidade" class="form-label">Quantidade *</label>
+                                <input type="number" class="form-control" id="quantidade" name="quantidade" 
+                                       min="1" required>
+                                <small class="form-text text-muted">Estoque disponível: <span id="available-stock">0</span></small>
+                                <div class="invalid-feedback">
+                                    Quantidade deve ser válida.
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="valor_venda" class="form-label">Valor Unitário *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" class="form-control currency-input" id="valor_venda" 
+                                           name="valor_venda" required>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor, informe o valor de venda.
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="total" class="form-label">Total</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" class="form-control" id="total" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="data_venda" class="form-label">Data da Venda *</label>
+                                <input type="date" class="form-control" id="data_venda" name="data_venda" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe a data da venda.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> Registrar Venda
+                                    </button>
+                                    <a href="{{ url_for('sales') }}" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Set default date to today
+    document.getElementById('data_venda').valueAsDate = new Date();
+    
+    // Product selection handler
+    document.getElementById('produto_id').addEventListener('change', function() {
+        const productSelect = this;
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const saleDetails = document.getElementById('sale-details');
+        const quantityInput = document.getElementById('quantidade');
+        const priceInput = document.getElementById('valor_venda');
+        const availableStock = document.getElementById('available-stock');
+        
+        if (selectedOption.value) {
+            const stock = parseInt(selectedOption.dataset.stock);
+            const price = parseFloat(selectedOption.dataset.price);
+            
+            // Show sale details
+            saleDetails.style.display = 'block';
+            
+            // Set available stock
+            availableStock.textContent = stock;
+            quantityInput.max = stock;
+            quantityInput.value = 1;
+            
+            // Set price
+            priceInput.value = price.toFixed(2).replace('.', ',');
+            
+            // Calculate total
+            updateTotal();
+        } else {
+            saleDetails.style.display = 'none';
+        }
+    });
+    
+    // Update total calculation
+    function updateTotal() {
+        const quantity = parseInt(document.getElementById('quantidade').value) || 0;
+        const price = parseFloat(document.getElementById('valor_venda').value.replace(',', '.')) || 0;
+        const total = quantity * price;
+        
+        document.getElementById('total').value = total.toFixed(2).replace('.', ',');
+    }
+    
+    // Add event listeners for total calculation
+    document.getElementById('quantidade').addEventListener('input', updateTotal);
+    document.getElementById('valor_venda').addEventListener('input', updateTotal);
+    
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    const quantity = parseInt(document.getElementById('quantidade').value);
+                    const stock = parseInt(document.getElementById('available-stock').textContent);
+                    
+                    if (quantity > stock) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        alert('Quantidade solicitada maior que o estoque disponível!');
+                        return false;
+                    }
+                    
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

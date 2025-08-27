@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Produto - Sistema de Estoque{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1><i class="fas fa-edit"></i> Editar Produto</h1>
+                <div class="page-actions">
+                    <a href="{{ url_for('products') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-box"></i> Dados do Produto</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="nome" class="form-label">Nome do Produto *</label>
+                                <input type="text" class="form-control" id="nome" name="nome" 
+                                       value="{{ product.nome }}" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe o nome do produto.
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="categoria" class="form-label">Categoria *</label>
+                                <input type="text" class="form-control" id="categoria" name="categoria" 
+                                       value="{{ product.categoria }}" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe a categoria.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="quantidade" class="form-label">Quantidade *</label>
+                                <input type="number" class="form-control" id="quantidade" name="quantidade" 
+                                       value="{{ product.quantidade }}" min="1" required>
+                                <div class="invalid-feedback">
+                                    Quantidade deve ser maior que zero.
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="valor_compra" class="form-label">Valor de Compra *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" class="form-control currency-input" id="valor_compra" 
+                                           name="valor_compra" value="{{ '%.2f'|format(product.valor_compra)|replace('.', ',') }}" required>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor, informe o valor de compra.
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="valor_venda" class="form-label">Valor de Venda *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" class="form-control currency-input" id="valor_venda" 
+                                           name="valor_venda" value="{{ '%.2f'|format(product.valor_venda)|replace('.', ',') }}" required>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Por favor, informe o valor de venda.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="data_entrada" class="form-label">Data de Entrada *</label>
+                                <input type="date" class="form-control" id="data_entrada" name="data_entrada" 
+                                       value="{{ product.data_entrada }}" required>
+                                <div class="invalid-feedback">
+                                    Por favor, informe a data de entrada.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> Salvar Alterações
+                                    </button>
+                                    <a href="{{ url_for('products') }}" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}
